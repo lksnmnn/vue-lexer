@@ -92,7 +92,7 @@ class VueLexerTestCase(TestCase):
           (Token.Punctuation, '>')
         ])
     
-    def test_lexing_directive_vfor(self):
+    def test_lexing_directive_two_with_accessors_and_forward_slash(self):
         lexer = lexers.get_lexer_by_name('vue')
         tokens = lexer.get_tokens('''
             <path v-for="link in graph.links" :key="link.id" />
@@ -102,7 +102,7 @@ class VueLexerTestCase(TestCase):
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'path'),
           (Token.Name.Tag, 'v-for'),
-          (Token.Literal.String, '=""link in graph.links" '),
+          (Token.Literal.String, '="link in graph.links" '),
           (Token.Name.Tag, ':key'),
           (Token.Literal.String, '="link.id"'),
           (Token.Punctuation, '>')

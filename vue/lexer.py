@@ -22,7 +22,7 @@ TOKENS.update({
         (r'(:[\S]+)(="[\S]+")', bygroups(Name.Tag, Literal.String)),
         (r'(:)', Operator),
         (r'(v-b-[\S]+)', Name.Tag),
-        (r'(v-[\w]+)(=".+)([:][\w]+)(="[\w]+")(>)', bygroups(Name.Tag, Literal.String, Name.Tag, Literal.String, Punctuation)),
+        (r'(v-[\w]+)(=".+)([:][\w]+)(="[\w\.]+")(>)', bygroups(Name.Tag, Literal.String, Name.Tag, Literal.String, Punctuation)),
         (r'(v-[\w]+)(="[\S]+")(>)', bygroups(Name.Tag, Literal.String, Punctuation)),
         (r'(v-[\w]+)(>)', bygroups(Name.Tag, Punctuation)),
         (r'(v-[\w]+)(=".+")(>)', bygroups(Name.Tag, Literal.String, Punctuation)),
