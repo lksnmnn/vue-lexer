@@ -57,6 +57,41 @@ class VueLexerTestCase(TestCase):
         tokens = lexer.get_tokens(text_three)
         self.assertEqual([i for i in tokens], expected_tokens_three)
 
+    def test_example(self):
+        lexer = lexers.get_lexer_by_name('vue')
+        tokens = lexer.get_tokens('''
+        <template>
+    <svg viewBox="-200, -200, 400, 400">
+        <g id="links">
+            <path 
+                v-for="link in graphlinks" :key="d.test"
+            />
+        </g>
+        <g id="nodes">
+            <circle 
+                v-for="node in graph.nodes"
+                :key="node.id" 
+                :cx="node.x" 
+                :cy="node.y" 
+                :r="getNodeRadius(node)"/>
+        </g>
+    </svg>
+</template> 
+        ''')
+        
+        self.assertEqual (self.__filter_tokens (tokens), [
+          (Token.Punctuation, '<'),
+          (Token.Name.Tag, 'path'),
+          (Token.Name.Attribute, 'v-for'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"link in graph.links"'),
+          (Token.Name.Attribute, ':key'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"d.test"'),
+          (Token.Punctuation, '/'),
+          (Token.Punctuation, '>')
+        ])
+
     def test_lexing_directive_one(self):
         lexer = lexers.get_lexer_by_name('vue')
         tokens = lexer.get_tokens('''
@@ -66,10 +101,11 @@ class VueLexerTestCase(TestCase):
         self.assertEqual (self.__filter_tokens (tokens), [
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'span'),
-          (Token.Name.Tag, 'v-if'),
-          (Token.Literal.String, '="book.read"'),
+          (Token.Name.Attribute, 'v-if'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"book.read"'),
           (Token.Punctuation, '>'),
-          (Token.Name.Attribute, 'Yes'),
+          (Token.Text, 'Yes'),
           (Token.Punctuation, '<'),
           (Token.Punctuation, '/'),
           (Token.Name.Tag, 'span'),
@@ -85,10 +121,12 @@ class VueLexerTestCase(TestCase):
         self.assertEqual (self.__filter_tokens (tokens), [
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'tr'),
-          (Token.Name.Tag, 'v-for'),
-          (Token.Literal.String, '="(book, index) in books" '),
-          (Token.Name.Tag, ':key'),
-          (Token.Literal.String, '="index"'),
+          (Token.Name.Attribute, 'v-for'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"(book, index) in books"'),
+          (Token.Name.Attribute, ':key'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"index"'),
           (Token.Punctuation, '>')
         ])
     
@@ -101,10 +139,12 @@ class VueLexerTestCase(TestCase):
         self.assertEqual (self.__filter_tokens (tokens), [
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'path'),
-          (Token.Name.Tag, 'v-for'),
-          (Token.Literal.String, '="link in graph.links" '),
-          (Token.Name.Tag, ':key'),
-          (Token.Literal.String, '="link.id"'),
+          (Token.Name.Attribute, 'v-for'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"link in graph.links"'),
+          (Token.Name.Attribute, ':key'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"link.id"'),
           (Token.Punctuation, '>')
         ])
 
@@ -117,10 +157,12 @@ class VueLexerTestCase(TestCase):
         self.assertEqual (self.__filter_tokens (tokens), [
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'path'),
-          (Token.Name.Tag, 'v-for'),
-          (Token.Literal.String, '="link in graph.links" '),
-          (Token.Name.Tag, ':key'),
-          (Token.Literal.String, '="link.id"'),
+          (Token.Name.Attribute, 'v-for'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"link in graph.links"'),
+          (Token.Name.Attribute, ':key'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"link.id"'),
           (Token.Punctuation, '/'),
           (Token.Punctuation, '>')
         ])
@@ -147,9 +189,9 @@ class VueLexerTestCase(TestCase):
         self.assertEqual (self.__filter_tokens (tokens), [
           (Token.Punctuation, '<'),
           (Token.Name.Tag, 'span'),
-          (Token.Name.Tag, 'v-else'),
+          (Token.Name.Attribute, 'v-else'),
           (Token.Punctuation, '>'),
-          (Token.Name.Attribute, 'No'),
+          (Token.Text, 'No'),
           (Token.Punctuation, '<'),
           (Token.Punctuation, '/'),
           (Token.Name.Tag, 'span'),
@@ -176,11 +218,12 @@ class VueLexerTestCase(TestCase):
           (Token.Name.Attribute, 'class'),
           (Token.Operator, '='),
           (Token.Literal.String, '"btn btn-warning btn-sm"'),
-          (Token.Name.Tag, 'v-b-modal.book-update-modal'),
-          (Token.Name.Tag, '@click'),
-          (Token.Literal.String, '="editBook(book)"'),
+          (Token.Name.Attribute, 'v-b-modal.book-update-modal'),
+          (Token.Name.Attribute, '@click'),
+          (Token.Operator, '='),
+          (Token.Literal.String, '"editBook(book)"'),
           (Token.Punctuation, '>'),
-          (Token.Name.Attribute, 'Update'),
+          (Token.Text, 'Update'),
           (Token.Punctuation, '<'),
           (Token.Punctuation, '/'),
           (Token.Name.Tag, 'button'),
