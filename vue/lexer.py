@@ -2,7 +2,8 @@ import re
 
 from pygments.lexer import bygroups, default, include
 from pygments.lexers.javascript import JavascriptLexer
-from pygments.token import Name, Operator, Punctuation, String, Text
+from pygments.token import Name, Operator, Punctuation, Keyword, String, Text, Literal
+
 
 # Use same tokens as `JavascriptLexer`, but with tags and attributes support
 TOKENS = JavascriptLexer.tokens
@@ -29,14 +30,36 @@ TOKENS.update(
         ],
         "attr": [
             ("{", Punctuation, "expression"),
-            ('".*?"', String, "#pop"),
+            ('"', Text, "expression"),
             ("'.*?'", String, "#pop"),
             default("#pop"),
         ],
         "expression": [
             ("{", Punctuation, "#push"),
             ("}", Punctuation, "#pop"),
+            ('"', Text, "#pop"),
+            ("(\w+)(\.)(\w+)", bygroups(Name.Variable, Operator, Name.Variable)),
+            ("(\w+)( in )", bygroups(Name.Variable, Keyword)),
+            (r"`", String.Backtick, "interpol"),
+            (
+                r"(\w+)(\()(\w+)(\))",
+                bygroups(Name.Function, Punctuation, Name.Variable, Punctuation),
+            ),
             include("root"),
+        ],
+        "interpol": [
+            (r"`", String.Backtick, "#pop"),
+            (r"\$\{", String.Interpol, "interpol-inside"),
+            include("interp"),
+        ],
+        "interpol-inside": [
+            (
+                "(\w+)(\.)(\w+)(\.)(\w+)",
+                bygroups(
+                    Name.Variable, Operator, Name.Variable, Operator, Name.Variable
+                ),
+            ),
+            include("interp-inside"),
         ],
     }
 )

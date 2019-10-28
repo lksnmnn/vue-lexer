@@ -3,6 +3,7 @@ __pycache__
 dist
 build
 *.egg-info
+.egg
 .cache
 .coverage
 coverage_html_report
